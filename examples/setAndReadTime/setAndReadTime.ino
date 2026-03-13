@@ -2,7 +2,7 @@
 #include <Wire.h>
 #define WIRE_CLOCK 100000
 
-#include "pcf8573.h"
+#include <PCF8573.h>
 PCF8573 rtc (0x68);
 
 uint8_t hour;
@@ -32,16 +32,16 @@ void loop()
   day = rtc.readTime(DAYS);
   month = rtc.readTime(MONTHS);
 
-  Serial.print("Hour: ");
+  Serial.print("\nHour:\t");
   Serial.println(hour);
 
-  Serial.print("Minutes: ");
+  Serial.print("Minute:\t");
   Serial.println(minutes);
 
-  Serial.print("Day: ");
+  Serial.print("Day:\t");
   Serial.println(day);
 
-  Serial.print("Month: ");
+  Serial.print("Month:\t");
   Serial.println(month);
 
 	delay(1000);
