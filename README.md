@@ -1,6 +1,6 @@
 # PCF8573 Arduino Library
 
-Arduino library for communicating with the PCF8573 RTC chip.
+Arduino library for communicating with the PCF8573 RTC I2C chip with Power Fail Detector.
 
 ## Inspiration
 
