@@ -22,7 +22,7 @@ void setup()
     rtc.setTime(DAYS, 26);       // setting day
     rtc.setTime(MONTHS, 5);     // setting month
 
-    rtc.write(RESET_SECONDS); // reset secound counter
+    rtc.write(RESET_PRESCALER); // reset secound counter
 }
 
 void loop()

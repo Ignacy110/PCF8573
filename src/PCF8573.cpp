@@ -1,7 +1,6 @@
 /*
     FILE: PCF8573.cpp
 	AUTHOR: Ignacy110 (github.com/Ignacy110)
-	DATE: 12.03.2026
 
 	PCF8573 Arduino Library
     https://github.com/Ignacy110/PCF8573
