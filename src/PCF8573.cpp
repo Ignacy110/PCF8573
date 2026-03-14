@@ -44,6 +44,19 @@ PCF8573::PCF8573(int SDA, int SCL, int address) {
 }
 #endif
 
+
+// CONVERTING METODS:
+
+uint8_t PCF8573::decToBcd(uint8_t value) {
+    return ((value / 10) << 4) | (value % 10);
+}
+
+uint8_t PCF8573::bcdToDec(uint8_t value) {
+    return (value & 0x0F) + ((value >> 4) * 10);
+}
+
+// TRANSMITION METODS:
+
 int PCF8573::write(int reg) {
     wire->beginTransmission(address);
     wire->write(reg);
@@ -69,8 +82,14 @@ int PCF8573::getReg() {
     return reg;
 }
 
+// METHODS OF OPERATING THE MODULE:
+
 void PCF8573::setTime(uint8_t mode_pointer, uint8_t value) {
     writeRegister(mode_pointer, decToBcd(value));
+}
+
+void PCF8573::setAlarmTime(uint8_t mode_pointer, uint8_t value) {
+    writeRegister(mode_pointer + 0x04, decToBcd(value));
 }
 
 uint8_t PCF8573::readTime(uint8_t mode_pointer) {
@@ -78,10 +97,28 @@ uint8_t PCF8573::readTime(uint8_t mode_pointer) {
     return bcdToDec(read());
 }
 
-uint8_t PCF8573::decToBcd(uint8_t value) {
-    return ((value / 10) << 4) | (value % 10);
+uint8_t PCF8573::readAlarmTime(uint8_t mode_pointer) {
+    write(mode_pointer + 0x04);
+    return bcdToDec(read());
 }
 
-uint8_t PCF8573::bcdToDec(uint8_t value) {
-    return (value & 0x0F) + ((value >> 4) * 10);
+bool PCF8573::readFlag(uint8_t flag_pointer) {
+    write(READ_FLAGS);
+    return read() & flag_pointer;
+}
+
+void PCF8573::resetPrescaler() {
+    write(RESET_PRESCALER);
+}
+
+void PCF8573::resetNODAflag() {
+    write(RESET_NODA);
+}
+
+void PCF8573::setNODAflag() {
+    write(SET_NODA);
+}
+
+void PCF8573::resetCOMPflag() {
+    write(RESET_COMP);
 }
