@@ -21,7 +21,7 @@
 	You should have received a copy of the GNU Lesser General Public
 	License along with the GNU C Library; if not, see <http://www.gnu.org/licenses/>.
 
-	This library was inspired by the PCF8574 Arduino library by MSZ98:
+	This library was inspired by the PCF8574 Arduino library by :
 	https://github.com/MSZ98/pcf8574
 */
 
@@ -32,15 +32,20 @@
 #include <Wire.h>
 
 enum mode_pointer {
-    HOURS   = 0,
-    MINUTES = 1,
-    DAYS    = 2,
-    MONTHS  = 3,
-    ALARM_HOURS   = 4,
-    ALARM_MINUTES = 5,
-    ALARM_DAYS    = 6,
-    ALARM_MONTHS  = 7,
-    RESET_SECONDS = 32,
+    HOURS   = 0x00,
+    MINUTES = 0x01,
+    DAYS    = 0x02,
+    MONTHS  = 0x03,
+    ALARM_HOURS   = 0x04,
+    ALARM_MINUTES = 0x05,
+    ALARM_DAYS    = 0x06,
+    ALARM_MONTHS  = 0x07,
+    READ_FLAGS = 0x10,
+    RESET_PRESCALER = 0x20,
+    TIME_ADJUST = 0x30,
+    RESET_NODA = 0x40,
+    SET_NODA = 0x50,
+    RESET_COMP = 0x60,
 };
 
 class PCF8573 {
