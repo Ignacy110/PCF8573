@@ -5,11 +5,11 @@ Arduino library for communicating with the PCF8573 RTC I2C chip with Power Fail 
 ## 1. Requirements
 
 ### 1.1 Hardware requirements
-The PCF8573 module requires for its operation:
-- **Crystal** oscillator (32.768 kHz) - connected between OSCI nad OSCO pins
+The PCF8573 module requires the following components:
+- **Crystal** oscillator (32.768 kHz) - connected between OSCI and OSCO pins
     - you can add **trim capacitor** to fine-tune the precision of timekeeping - a trimmer is connected between OSCI and VDD
-- SDA and SCL **pull-up resistors** (4,7kOhm) - if your board does not have such resistors
-- **100nF capacitor** between VDD and VSS1 (for module testing this can be omitted)
+- SDA and SCL **pull-up resistors** (4,7 kΩ) - if your board does not have such resistors
+- **100 nF capacitor** between VDD and VSS1 (for module testing this can be omitted)
 
 ### 1.2 Software requirements
 
@@ -17,7 +17,7 @@ To use this library you need to include the `<Wire.h>` library in your sketch, w
 
 ## 2. Usage
 
-When you use the PCF8573 module, you can:
+With the PCF8573 module you can:
 1. read and set the time
 2. read and set the alarm time
 3. read flags
@@ -29,7 +29,7 @@ When you use the PCF8573 module, you can:
 
 To set the time you use `setTime()` method which requires a time field identifier and your value e.g. `setTime(PCF8573::time::HOURS, 7)` that means set the *hours register* to 7.
 
-`setTime()` parameters:
+**setTime()** parameters:
 
 |Function| setTime() | accepted values |
 | :--- | --- | ------------- |
@@ -49,15 +49,15 @@ To set the time you use `setTime()` method which requires a time field identifie
 
 #### 2.1.2 Read the time
 
-To read the time you use `readTime()` method which requires a time field identifier e.g. `readTime(PCF8573::time::MINUTES)` that means read the *minutes register*. This method return `uint8_t` value.
+To read the time you use `readTime()` method which requires a time field identifier e.g. `readTime(PCF8573::time::MINUTES)` that means read the *minutes register*. This method return a `uint8_t` value.
 
-`readTime()` parameters:
+**readTime()** parameters:
 
 |Function| readTime() |
 | :--- | --- |
 |Read hours| `readTime(PCF8573::time::HOURS);` |
 |Read minutes| `readTime(PCF8573::time::MINUTES);` |
-|Read days| `readTime(PCF8573::time::DAYS;` |
+|Read days| `readTime(PCF8573::time::DAYS);` |
 |Read months| `readTime(PCF8573::time::MONTHS);` |
 
 ### 2.2 Alarm time operations
@@ -68,26 +68,26 @@ The alarm works like an alarm clock. When the hour strikes, the **COMP flag** is
 
 It is similar to setting the time but to set the alarm time you use `setAlarmTime()` method which requires a time field identifier and your value e.g. `setAlarmTime(PCF8573::time::DAYS, 21)` that means set the *days register* to 21.
 
-`setAlarmTime()` parameters:
+**setAlarmTime()** parameters:
 
 |Function| setAlarmTime() | accepted values |
 | :--- | --- | ------------- |
 |Set alarm hours| `setAlarmTime(PCF8573::time::HOURS, value);` | 0 to 23 |
 |Set alarm minutes| `setAlarmTime(PCF8573::time::MINUTES, value);` | 0 to 59 |
-|Set alarm days| `setAlarmTime(PCF8573::time::DAYS, value);` | 0 to 28 / 29 <br> 0 to 30 <br> 0 to 31 |
-|Set alarm months| `setAlarmTime(PCF8573::time::MONTHS, value);` | 0 to 12 |
+|Set alarm days| `setAlarmTime(PCF8573::time::DAYS, value);` | 1 to 28 / 29 <br> 1 to 30 <br> 1 to 31 |
+|Set alarm months| `setAlarmTime(PCF8573::time::MONTHS, value);` | 1 to 12 |
 
 #### 2.2.2 Read the alarm time
 
-It is similar to reading the time but read the time you use `readAlarmTime()` method which requires a time field identifier e.g. `readAlarmTime(PCF8573::time::MONTHS)` that means read the *months register*. This method return `uint8_t` value.
+It is similar to reading the time but to read the time you use `readAlarmTime()` method which requires a time field identifier e.g. `readAlarmTime(PCF8573::time::MONTHS)` that means read the *months register*. This method return a `uint8_t` value.
 
-`readAlarmTime()` parameters:
+**readAlarmTime()** parameters:
 
 |Function| readAlarmTime() |
 | :--- | --- |
 |Read alarm hours| `readAlarmTime(PCF8573::time::HOURS);` |
 |Read alarm minutes| `readAlarmTime(PCF8573::time::MINUTES);` |
-|Read alarm days| `readTAlarmime(PCF8573::time::DAYS;` |
+|Read alarm days| `readAlarmTime(PCF8573::time::DAYS;` |
 |Read alarm months| `readAlarmTime(PCF8573::time::MONTHS);` |
 
 ### 2.3 Flags operation
@@ -97,15 +97,15 @@ The PCF8573 module has 3 flags:
 |---|---|---|---|
 |POWF|The flag indicates a detected power failure.|When a power failure occurs||
 |COMP|The flag signals that the alarm has sounded|When *alarm time* is the same as RTC *time*|By user|
-|NODA|The flag says to ignore the date when comparing the alarm and time (we only compare hours and minutes)|By user|By user|
+|NODA|The flag says to ignore the date when comparing the alarm and time (when comparing we only look at hours and minutes)|By user|By user|
 
 #### 2.3.1 Read the flag
 
-We can read one of the three flags. To read the time you use `readFlag()` method which requires a time field identifier e.g. `readFlag(PCF8573::time::COMP)` that means read the *COMP flag register*. This method return `bool` value.
+We can read one of the three flags. To read the time you use `readFlag()` method which requires a time field identifier e.g. `readFlag(PCF8573::time::COMP)` that means read the *COMP flag register*. This method return a `bool` value.
 
-`readFlag()` parameters:
+**readFlag()** parameters:
 
-|Function| readAlarmTime() |
+|Function| readFlag() |
 | :--- | --- |
 |Read POWF flag| `readFlag(PCF8573::time::POWF);` |
 |Read COMP flag| `readFlag(PCF8573::time::COMP);` |
