@@ -1,7 +1,6 @@
 /*
     FILE: PCF8573.h
 	AUTHOR: Ignacy110 (github.com/Ignacy110)
-	DATE: 12.03.2026
 
 	PCF8573 Arduino Library
     https://github.com/Ignacy110/PCF8573
@@ -31,7 +30,7 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-enum mode_pointer {
+enum class time_mode_pointer {
     HOURS   = 0x00,
     MINUTES = 0x01,
     DAYS    = 0x02,
@@ -40,6 +39,9 @@ enum mode_pointer {
     // ALARM_MINUTES = 0x05,
     // ALARM_DAYS    = 0x06,
     // ALARM_MONTHS  = 0x07,
+};
+
+enum function_mode_pointer {
     READ_FLAGS = 0x10,
     RESET_PRESCALER = 0x20,
     //TIME_ADJUST = 0x30,
@@ -48,7 +50,7 @@ enum mode_pointer {
     RESET_COMP = 0x60,
 };
 
-enum flags {
+enum class flags_mode_pointer {
     POWF = 0x01,
     COMP = 0x02,
     NODA = 0x04,
@@ -77,12 +79,12 @@ public:
     PCF8573(int SDA, int SCL, int address);
 	#endif
 
-    void setTime(uint8_t mode_pointer, uint8_t value);
-    void setAlarmTime(uint8_t mode_pointer, uint8_t value);
-    uint8_t readTime(uint8_t mode_pointer);
-    uint8_t readAlarmTime(uint8_t mode_pointer);
+    void setTime(time_mode_pointer mode_pointer, uint8_t value);
+    void setAlarmTime(time_mode_pointer mode_pointer, uint8_t value);
+    uint8_t readTime(time_mode_pointer mode_pointer);
+    uint8_t readAlarmTime(time_mode_pointer mode_pointer);
 
-    bool readFlag(uint8_t flag_pointer);
+    bool readFlag(flags_mode_pointer flag_pointer);
 
     void resetPrescaler();
 

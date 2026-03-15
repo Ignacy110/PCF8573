@@ -1,7 +1,6 @@
 /*
     FILE: PCF8573.cpp
 	AUTHOR: Ignacy110 (github.com/Ignacy110)
-	DATE: 12.03.2026
 
 	PCF8573 Arduino Library
     https://github.com/Ignacy110/PCF8573
@@ -84,27 +83,27 @@ int PCF8573::getReg() {
 
 // METHODS OF OPERATING THE MODULE:
 
-void PCF8573::setTime(uint8_t mode_pointer, uint8_t value) {
-    writeRegister(mode_pointer, decToBcd(value));
+void PCF8573::setTime(time_mode_pointer mode_pointer, uint8_t value) {
+    writeRegister(static_cast<uint8_t>(mode_pointer), decToBcd(value));
 }
 
-void PCF8573::setAlarmTime(uint8_t mode_pointer, uint8_t value) {
-    writeRegister(mode_pointer + 0x04, decToBcd(value));
+void PCF8573::setAlarmTime(time_mode_pointer mode_pointer, uint8_t value) {
+    writeRegister(static_cast<uint8_t>(mode_pointer) + 0x04, decToBcd(value));
 }
 
-uint8_t PCF8573::readTime(uint8_t mode_pointer) {
-    write(mode_pointer);
+uint8_t PCF8573::readTime(time_mode_pointer mode_pointer) {
+    write(static_cast<uint8_t>(mode_pointer));
     return bcdToDec(read());
 }
 
-uint8_t PCF8573::readAlarmTime(uint8_t mode_pointer) {
-    write(mode_pointer + 0x04);
+uint8_t PCF8573::readAlarmTime(time_mode_pointer mode_pointer) {
+    write(static_cast<uint8_t>(mode_pointer) + 0x04);
     return bcdToDec(read());
 }
 
-bool PCF8573::readFlag(uint8_t flag_pointer) {
+bool PCF8573::readFlag(flags_mode_pointer flag_pointer) {
     write(READ_FLAGS);
-    return read() & flag_pointer;
+    return read() & static_cast<uint8_t>(flag_pointer);
 }
 
 void PCF8573::resetPrescaler() {
