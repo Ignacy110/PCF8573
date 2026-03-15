@@ -44,7 +44,7 @@ PCF8573::PCF8573(int SDA, int SCL, int address) {
 #endif
 
 
-// CONVERTING METODS:
+// CONVERTING METHODS:
 
 uint8_t PCF8573::decToBcd(uint8_t value) {
     return ((value / 10) << 4) | (value % 10);
@@ -54,7 +54,7 @@ uint8_t PCF8573::bcdToDec(uint8_t value) {
     return (value & 0x0F) + ((value >> 4) * 10);
 }
 
-// TRANSMITION METODS:
+// TRANSMISSION METHODS:
 
 int PCF8573::write(int reg) {
     wire->beginTransmission(address);
@@ -83,41 +83,41 @@ int PCF8573::getReg() {
 
 // METHODS OF OPERATING THE MODULE:
 
-void PCF8573::setTime(time_mode_pointer mode_pointer, uint8_t value) {
+void PCF8573::setTime(time mode_pointer, uint8_t value) {
     writeRegister(static_cast<uint8_t>(mode_pointer), decToBcd(value));
 }
 
-void PCF8573::setAlarmTime(time_mode_pointer mode_pointer, uint8_t value) {
+void PCF8573::setAlarmTime(time mode_pointer, uint8_t value) {
     writeRegister(static_cast<uint8_t>(mode_pointer) + 0x04, decToBcd(value));
 }
 
-uint8_t PCF8573::readTime(time_mode_pointer mode_pointer) {
+uint8_t PCF8573::readTime(time mode_pointer) {
     write(static_cast<uint8_t>(mode_pointer));
     return bcdToDec(read());
 }
 
-uint8_t PCF8573::readAlarmTime(time_mode_pointer mode_pointer) {
+uint8_t PCF8573::readAlarmTime(time mode_pointer) {
     write(static_cast<uint8_t>(mode_pointer) + 0x04);
     return bcdToDec(read());
 }
 
-bool PCF8573::readFlag(flags_mode_pointer flag_pointer) {
-    write(READ_FLAGS);
+bool PCF8573::readFlag(flag flag_pointer) {
+    write(static_cast<uint8_t>(function::READ_FLAGS));
     return read() & static_cast<uint8_t>(flag_pointer);
 }
 
 void PCF8573::resetPrescaler() {
-    write(RESET_PRESCALER);
+    write(static_cast<uint8_t>(function::RESET_PRESCALER));
 }
 
 void PCF8573::resetNODAflag() {
-    write(RESET_NODA);
+    write(static_cast<uint8_t>(function::RESET_NODA));
 }
 
 void PCF8573::setNODAflag() {
-    write(SET_NODA);
+    write(static_cast<uint8_t>(function::SET_NODA));
 }
 
 void PCF8573::resetCOMPflag() {
-    write(RESET_COMP);
+    write(static_cast<uint8_t>(function::RESET_COMP));
 }

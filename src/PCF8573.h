@@ -30,35 +30,19 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-enum class time_mode_pointer {
-    HOURS   = 0x00,
-    MINUTES = 0x01,
-    DAYS    = 0x02,
-    MONTHS  = 0x03,
-    // ALARM_HOURS   = 0x04,
-    // ALARM_MINUTES = 0x05,
-    // ALARM_DAYS    = 0x06,
-    // ALARM_MONTHS  = 0x07,
-};
-
-enum function_mode_pointer {
-    READ_FLAGS = 0x10,
-    RESET_PRESCALER = 0x20,
-    //TIME_ADJUST = 0x30,
-    RESET_NODA = 0x40,
-    SET_NODA = 0x50,
-    RESET_COMP = 0x60,
-};
-
-enum class flags_mode_pointer {
-    POWF = 0x01,
-    COMP = 0x02,
-    NODA = 0x04,
-};
-
 class PCF8573 {
 
 private:
+
+    enum class function : uint8_t {
+        READ_FLAGS = 0x10,
+        RESET_PRESCALER = 0x20,
+        //TIME_ADJUST = 0x30,
+        RESET_NODA = 0x40,
+        SET_NODA = 0x50,
+        RESET_COMP = 0x60,
+    };
+
     int address;
     int reg = 255;
     TwoWire *wire;
@@ -73,18 +57,31 @@ private:
 
 public:
 
+    enum class time : uint8_t {
+        HOURS   = 0x00,
+        MINUTES = 0x01,
+        DAYS    = 0x02,
+        MONTHS  = 0x03,
+    };
+
+    enum class flag : uint8_t {
+        POWF = 0x01,
+        COMP = 0x02,
+        NODA = 0x04,
+    };
+
     PCF8573(TwoWire &wire, int address);
     PCF8573(int address);
 	#ifdef STICKBREAKER
     PCF8573(int SDA, int SCL, int address);
 	#endif
 
-    void setTime(time_mode_pointer mode_pointer, uint8_t value);
-    void setAlarmTime(time_mode_pointer mode_pointer, uint8_t value);
-    uint8_t readTime(time_mode_pointer mode_pointer);
-    uint8_t readAlarmTime(time_mode_pointer mode_pointer);
+    void setTime(time mode_pointer, uint8_t value);
+    void setAlarmTime(time mode_pointer, uint8_t value);
+    uint8_t readTime(time mode_pointer);
+    uint8_t readAlarmTime(time mode_pointer);
 
-    bool readFlag(flags_mode_pointer flag_pointer);
+    bool readFlag(flag flag_pointer);
 
     void resetPrescaler();
 
