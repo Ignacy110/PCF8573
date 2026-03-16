@@ -30,26 +30,19 @@
 #include <Arduino.h>
 #include <Wire.h>
 
-enum mode_pointer {
-    HOURS   = 0x00,
-    MINUTES = 0x01,
-    DAYS    = 0x02,
-    MONTHS  = 0x03,
-    ALARM_HOURS   = 0x04,
-    ALARM_MINUTES = 0x05,
-    ALARM_DAYS    = 0x06,
-    ALARM_MONTHS  = 0x07,
-    READ_FLAGS = 0x10,
-    RESET_PRESCALER = 0x20,
-    TIME_ADJUST = 0x30,
-    RESET_NODA = 0x40,
-    SET_NODA = 0x50,
-    RESET_COMP = 0x60,
-};
-
 class PCF8573 {
 
 private:
+
+    enum class function : uint8_t {
+        READ_FLAGS = 0x10,
+        RESET_PRESCALER = 0x20,
+        //TIME_ADJUST = 0x30,
+        RESET_NODA = 0x40,
+        SET_NODA = 0x50,
+        RESET_COMP = 0x60,
+    };
+
     int address;
     int reg = 255;
     TwoWire *wire;
@@ -57,7 +50,25 @@ private:
     uint8_t decToBcd(uint8_t value);
     uint8_t bcdToDec(uint8_t value);
 
+    int write(int reg);
+    int writeRegister(uint8_t reg, uint8_t value);
+    int read();
+    int getReg();
+
 public:
+
+    enum class time : uint8_t {
+        HOURS   = 0x00,
+        MINUTES = 0x01,
+        DAYS    = 0x02,
+        MONTHS  = 0x03,
+    };
+
+    enum class flag : uint8_t {
+        POWF = 0x01,
+        COMP = 0x02,
+        NODA = 0x04,
+    };
 
     PCF8573(TwoWire &wire, int address);
     PCF8573(int address);
@@ -65,13 +76,18 @@ public:
     PCF8573(int SDA, int SCL, int address);
 	#endif
 
-    int write(int reg);
-    int writeRegister(uint8_t reg, uint8_t value);
-    int read();
-    int getReg();
+    void setTime(time mode_pointer, uint8_t value);
+    void setAlarmTime(time mode_pointer, uint8_t value);
+    uint8_t readTime(time mode_pointer);
+    uint8_t readAlarmTime(time mode_pointer);
 
-    void setTime(uint8_t mode_pointer, uint8_t value);
-    uint8_t readTime(uint8_t mode_pointer);
+    bool readFlag(flag flag_pointer);
+
+    void resetPrescaler();
+
+    void resetNODAflag();
+    void setNODAflag();
+    void resetCOMPflag();
 };
 
 #endif /* PCF8573_H */
