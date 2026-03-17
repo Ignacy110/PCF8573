@@ -9,7 +9,8 @@ The library allows you to easily set and read time, configure alarm registers an
 2. [Connecting the PCF8573 chip and pinout](#2-connecting-the-pcf8573-chip-and-pinout)
 3. [Usage](#3-usage)
 4. [Methods](#4-methods)
-5. [Inspiration](#5-inspiration)
+5. [Power Fail Detector](#5-power-fail-detector)
+6. [Inspiration](#6-inspiration)
 
 ## 1. Installation
 
@@ -24,7 +25,7 @@ The library allows you to easily set and read time, configure alarm registers an
 
 The PCF8573 chip requires the following components:
 - **Crystal** oscillator (32.768 kHz) - connected between OSCI and OSCO pins
-    - you can add **trim capacitor** to fine-tune the precision of timekeeping - a trimmer is connected between OSCI and VDD
+    - the **trim capacitor** can be added to fine-tune the precision of timekeeping - a trimmer is connected between OSCI and VDD pins
 - SDA and SCL **pull-up resistors** (4.7 kΩ) - if your board does not have such resistors
 - **100 nF capacitor** between VDD and VSS1
 
@@ -37,15 +38,15 @@ The PCF8573 chip requires the following components:
 | --- | :-: | --- | :-: | --- |
 |A0|1|address input|input| to GND |
 |A1|2|address input|input| to GND |
-|COMP|3|comparator output|output| not connect |
+|COMP|3|comparator output|output| not connected |
 |SDA|4|I2C SDA|transmission| to SDA pin in your microcontroller|
-|SCL|5|I2C SCL|transmission| to SDL pin in your microcontroller|
+|SCL|5|I2C SCL|transmission| to SCL pin in your microcontroller|
 |EXTPF|6|enable power fail flag input|input|to GND|
 |PFIN|7|power fail flag input|input|to GND|
 |VSS2|8|**GND** for the I2C interface|power|to GND|
-|MIN|9|one pulse per minute output|output|not connect|
-|SEC|10|one pulse per second output|output|not connect|
-|FSET|11|oscillator tuning output|output|not connect|
+|MIN|9|one pulse per minute output|output|not connecedt|
+|SEC|10|one pulse per second output|output|not connected|
+|FSET|11|oscillator tuning output|output|not connected|
 |TEST|12|test input|input|to GND|
 |OSCI|13|oscillator input|osc. input|Crystal oscillator (32.768 kHz)|
 |OSCO|14|oscillator input/output|osc. input/output|Crystal oscillator (32.768 kHz)|
@@ -54,10 +55,13 @@ The PCF8573 chip requires the following components:
 
 The last column shows the simplest way to connect the PCF8573 chip.
 
-Depending on your needs, you can use your own connection methods. For example, you can use the output pins to read the COMP flag or the seconds/minutes pulses in hardware. You can also specify VCC at the inputs, not GND, to change the PCF8573 address or the operation of the power fail detector.
+> [!NOTE]
+> If the outputs are not used they may not be connected.
  
-> [!WARNING]
-> If you do not connect the inputs to VCC or GND, the system may not function properly!
+> [!CAUTION]
+> Don't leave inputs unconnected to VCC or GND. Outputs not connected to VCC or GND may cause incorrect operation of the system!
+
+Depending on your application, you may connect the chip differently. For instance, output pins can be used to read the COMP flag or the one-second/one-minute pulses directly in hardware. Additionally, setting inputs to VCC instead of GND allows you to modify the PCF8573 I2C address or change the behavior of the Power Fail Detector.
 
 The address of the PCF8573 chip is set via inputs A0 and A1. Table of assigned addresses:
 |A1 input state|A0 input state|PCF8573 address|
@@ -71,11 +75,11 @@ The address of the PCF8573 chip is set via inputs A0 and A1. Table of assigned a
 
 ### 3.1 Basic setup
 
-To use this library you need to use the `<Wire.h>` library in your sketch, which allows communication with the chip via I2C. In addition to include, we need to properly initiate and start the transmission.
+To use this library the aplication need to use the `<Wire.h>` library in your sketch, which allows communication with the chip via I2C. In addition to include, we need to properly initiate and start the transmission.
 
-Of course, we cannot forget to import this library `<PCF8573.h>`.
+Include this library `<PCF8573.h>`.
 
-Before using the library methods you need to create an instance of the `PCF8573` class e.g. `PCF8573 rtc (0x68);` where the parameter takes the value of the I2C address set via pins A0 and A1. In short this object represents the physical PCF8573 chip with a given address *(0x68)* connected via I2C.
+Before using the library methods you need to create an instance of the `PCF8573` class e.g. `PCF8573 rtc (0x68);` where the parameter takes the value of the I2C address set via pins A0 and A1. In short this object represents the physical PCF8573 chip with a given address *0x68* connected via I2C.
 
 Example:
 ```cpp
@@ -93,8 +97,11 @@ void setup()
 ```
 
 ### 3.2 Use library methods
-#### Simple example of use
-This program sets the time to 12:34 and display it from our chip on serial monitor (in Arduino IDE). We can see how minutes and later hours increment.
+
+All available methods and their syntax are described in  [paragraph 4](#4-methods).
+
+#### Simple example of use:
+This program sets the time to 12:34 and display it on the Serial Monitor (in Arduino IDE). We can see how minutes and later hours increment.
 ```cpp
 #include <Wire.h> // library required for I2C communication
 #define WIRE_CLOCK 100000 // set the wire transmission clock
@@ -127,9 +134,6 @@ void loop()
 > [!TIP]
 > More examples are in the *examples* folder.
 
-> [!TIP]
-> All available methods are described in paragraph 5.
-
 ## 4. Methods
 
 With the PCF8573 chip you can:
@@ -148,7 +152,7 @@ You can use the following methods to perform these activities:
 
 #### 4.1.1 Set the time
 
-To set the time you use `setTime()` method which requires a time field identifier and your value e.g. `setTime(PCF8573::time::HOURS, 7)` that means set the *hours register* to 7.
+To set the time, use the `setTime()` method which requires a time field identifier and your value e.g. `setTime(PCF8573::time::HOURS, 7)` that means set the *hours register* to 7.
 
 **setTime()** parameters:
 
@@ -163,14 +167,14 @@ To set the time you use `setTime()` method which requires a time field identifie
 > The **DAYS** register accepts values ​​appropriate to the month.
 
 > [!WARNING]
-> If you send incorrect values, the chip may not work properly!
+> Incorrect values ​​sent may cause the chip to malfunction!
 
 > [!IMPORTANT]
 > Leap year support (February 29) must be handled externally because the PCF8573 does not have a year counter.
 
 #### 4.1.2 Read the time
 
-To read the time you use `readTime()` method which requires a time field identifier e.g. `readTime(PCF8573::time::MINUTES)` that means read the *minutes register*. This method return a `uint8_t` value.
+To read the time, use the `readTime()` method which requires a time field identifier e.g. `readTime(PCF8573::time::MINUTES)` that means read the *minutes register*. This method returns a `uint8_t` value.
 
 **readTime()** parameters:
 
@@ -187,7 +191,7 @@ The alarm works like an alarm clock. When the hour strikes, the **COMP flag** is
 
 #### 4.2.1 Set the alarm time
 
-It is similar to setting the time but to set the alarm time you use `setAlarmTime()` method which requires a time field identifier and your value e.g. `setAlarmTime(PCF8573::time::DAYS, 21)` that means set the *days alarm register* to 21.
+To set the alarm time, use the `setAlarmTime()` method which requires a time field identifier and your value e.g. `setAlarmTime(PCF8573::time::DAYS, 21)` that means set the *days alarm register* to 21.
 
 **setAlarmTime()** parameters:
 
@@ -200,7 +204,7 @@ It is similar to setting the time but to set the alarm time you use `setAlarmTim
 
 #### 4.2.2 Read the alarm time
 
-It is similar to reading the time but to read the time you use `readAlarmTime()` method which requires a time field identifier e.g. `readAlarmTime(PCF8573::time::MONTHS)` that means read the *months alarm register*. This method return a `uint8_t` value.
+To read the alarm time, use the `readAlarmTime()` method which requires a time field identifier e.g. `readAlarmTime(PCF8573::time::MONTHS)` that means read the *months alarm register*. This method returns a `uint8_t` value.
 
 **readAlarmTime()** parameters:
 
@@ -216,13 +220,13 @@ It is similar to reading the time but to read the time you use `readAlarmTime()`
 The PCF8573 chip has 3 flags:
 |Flag|Description|method of set (0 to 1)|method of reset (1 to 0)|
 |---|---|---|---|
-|POWF|The flag indicates a detected power failure|When a power failure occurs||
+|POWF|The flag indicates a detected power failure<br>[More information about Power Fail Detector and POWF flag in chapter 5](#5-power-fail-detector)|When a power failure occurs|By setting the time or alarm time|
 |COMP|The flag signals that the alarm has sounded|When *alarm time* is the same as RTC *time*|By user|
 |NODA|The flag says to ignore the date when comparing the alarm and time (when comparing we only look at hours and minutes)|By user|By user|
 
 #### 4.3.1 Read the flag
 
-We can read one of the three flags. To read the time you use `readFlag()` method which requires a time field identifier e.g. `readFlag(PCF8573::flag::COMP)` that means read the *COMP flag register*. This method return a `bool` value.
+To read the flag, use the `readFlag()` method which requires a time field identifier e.g. `readFlag(PCF8573::flag::COMP)` that means read the *COMP flag register*. This method returns a `bool` value.
 
 **readFlag()** parameters:
 
@@ -234,11 +238,17 @@ We can read one of the three flags. To read the time you use `readFlag()` method
 
 #### 4.3.2 Reset the flag
 
-We can reset COMP or NODA flag by methods: `resetCOMPflag()` or `resetNODAflag()`. Reset means changing the state of the flag from 1 to 0.
+To reset the flag, use the `resetCOMPflag()` or `resetNODAflag()` method. Reset means changing the state of the flag from 1 to 0.
 
 #### 4.3.3 Set the flag
 
-We can only set NODA flag by method: `setNODAflag()` Set means changing the state of the flag from 0 to 1.
+To set the flag, use the `setNODAflag()` method. Set means changing the state of the flag from 0 to 1.
+
+> [!NOTE]
+> Using methods for flags, you can:
+> - read one of three flags: `POWF`, `COMP`, `NODA`;
+> - reset one of two flags: `COMP`, `NODA`;
+> - set one: `NODA`;
 
 ### 4.4 Functions
 
@@ -257,7 +267,31 @@ We can only set NODA flag by method: `setNODAflag()` Set means changing the stat
 >In this example we set time 09:11:00.
 >Without `resetPrescaler()` function we can set 09:11:xx where *xx* has the value at which the chip stopped counting (so random value).
 
-## 5. Inspiration
+## 5. Power Fail Detector
+
+Power Fail Detector sets the `POWF` flag to 1 when a power failure occurs.
+
+There are two types of power failure detection - **internal** and **external**.
+
+**Internal mode:**
+The flag indicates a detected power failure - VDD-VSS1 voltage reaches approximately 1.2V or less (Voltage of 1.2V due to the design of the PCF8573 chip to work with 1.2 V nickel cadmium battery).
+
+**External mode:**
+To use external power failure detection, the *EXTPF* input must be at logic HIGH (e.g. connected to VCC).
+
+The `POWF` flag is set based on the *PFIN* input. If it goes to LOW state, the system interprets it as a power failure.
+
+|EXTPF input state| PFIN input state | Function |
+| :--: | :-: | --- |
+|LOW| LOW | Power Fail Detector - **Internal mode**|
+|LOW| HIGH | test mode - don't use
+|HIGH| LOW | Power Fail Detector - **External mode** - **power supply status incorrect**|
+|HIGH| HIGH | Power Fail Detector - **External mode** - **power supply status correct**|
+
+> [!IMPORTANT]
+> Power Fail Detector does not reset the `POWF` flag to 0. To reset this flag, you must set the time or alarm time.
+
+## 6. Inspiration
 
 This library was inspired by the PCF8574 Arduino library by MSZ98:
 https://github.com/MSZ98/pcf8574
