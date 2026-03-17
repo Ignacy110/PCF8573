@@ -2,7 +2,7 @@
 
 Arduino library for communicating with the PCF8573 RTC I2C chip with Power Fail Detector.
 
-The library allows you to easily set and read time, configure alarm registers and access status flags of the PCF8573 chip.
+The library makes it easy to set and read time, set alarm registers and access status flags of the PCF8573 chip.
 
 ### List of Contents:
 1. [Installation](#1-installation)
@@ -75,7 +75,7 @@ The address of the PCF8573 chip is set via inputs A0 and A1. Table of assigned a
 
 ### 3.1 Basic setup
 
-To use this library the aplication need to use the `<Wire.h>` library in your sketch, which allows communication with the chip via I2C. In addition to include, we need to properly initiate and start the transmission.
+To use this library the aplication need to use the `<Wire.h>` library in your sketch, which allows communication with the chip via I2C. In addition to include, you need to properly initiate and start the transmission.
 
 Include this library `<PCF8573.h>`.
 
@@ -101,7 +101,7 @@ void setup()
 All available methods and their syntax are described in  [paragraph 4](#4-methods).
 
 #### Simple example of use:
-This program sets the time to 12:34 and display it on the Serial Monitor (in Arduino IDE). We can see how minutes and later hours increment.
+This program sets the time to 12:34 and display it on the Serial Monitor (in Arduino IDE). You can see how minutes and later hours increment.
 ```cpp
 #include <Wire.h> // library required for I2C communication
 #define WIRE_CLOCK 100000 // set the wire transmission clock
@@ -220,9 +220,9 @@ To read the alarm time, use the `readAlarmTime()` method which requires a time f
 The PCF8573 chip has 3 flags:
 |Flag|Description|method of set (0 to 1)|method of reset (1 to 0)|
 |---|---|---|---|
-|POWF|The flag indicates a detected power failure<br>[More information about Power Fail Detector and POWF flag in chapter 5](#5-power-fail-detector)|When a power failure occurs|By setting the time or alarm time|
+|POWF|The flag indicates a detected power failure<br>([more information about Power Fail Detector and POWF flag in chapter 5](#5-power-fail-detector))|When a power failure occurs|By setting the time or alarm time|
 |COMP|The flag signals that the alarm has sounded|When *alarm time* is the same as RTC *time*|By user|
-|NODA|The flag says to ignore the date when comparing the alarm and time (when comparing we only look at hours and minutes)|By user|By user|
+|NODA|The flag says to ignore the date when comparing the alarm and time (when comparing it only looks at hours and minutes)|By user|By user|
 
 #### 4.3.1 Read the flag
 
@@ -264,8 +264,8 @@ To set the flag, use the `setNODAflag()` method. Set means changing the state of
 >rtc.setTime(PCF8573::time::MINUTES, 11);   // setting minutes
 >rtc.resetPrescaler();   // resetting seconds counter
 >```
->In this example we set time 09:11:00.
->Without `resetPrescaler()` function we can set 09:11:xx where *xx* has the value at which the chip stopped counting (so random value).
+>In this example you set time 09:11:00.
+>Without `resetPrescaler()` function you can set 09:11:xx where *xx* has the value at which the chip stopped counting (so random value).
 
 ## 5. Power Fail Detector
 
