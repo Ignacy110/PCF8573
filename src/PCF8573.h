@@ -1,11 +1,11 @@
 /*
-    FILE: PCF8573.h
-    VERSION: 1.0.0
-    DATE: 17.03.2026
+	FILE: PCF8573.h
+	VERSION: 1.0.0
+	DATE: 17.03.2026
 	AUTHOR: Ignacy110 (github.com/Ignacy110)
 
 	PCF8573 Arduino Library
-    https://github.com/Ignacy110/PCF8573
+	https://github.com/Ignacy110/PCF8573
 
 	Copyright (C) 2026 Ignacy110
 
@@ -20,9 +20,9 @@
 	See the GNU Lesser General Public License for more details.
 
 	You should have received a copy of the GNU Lesser General Public
-	License along with the GNU C Library; if not, see <http://www.gnu.org/licenses/>.
+	License along with this library; if not, see <http://www.gnu.org/licenses/>.
 
-	This library was inspired by the PCF8574 Arduino library by :
+	This library was inspired by the PCF8574 Arduino library by MSZ98:
 	https://github.com/MSZ98/pcf8574
 */
 
