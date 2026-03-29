@@ -7,7 +7,7 @@
 #define WIRE_CLOCK 100000 // set the wire transmission clock
 
 #include <PCF8573.h> // PCF8573 library
-PCF8573 rtc (0x68); // create an rtc object with address of our PCF8573 chip
+PCF8573 rtc(0x68); // create an rtc object with address of our PCF8573 chip
 
 void setup()
 {

@@ -1,7 +1,7 @@
 /*
   FILE: PCF8573.h
-  VERSION: 1.0.1
-  DATE: 21.03.2026
+  VERSION: 1.0.2
+  DATE: 29.03.2026
   AUTHOR: Ignacy110 (github.com/Ignacy110)
 
   PCF8573 Arduino Library
